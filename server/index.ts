@@ -1,5 +1,4 @@
 import dotenv from 'dotenv';
-
 dotenv.config();
 import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
@@ -7,8 +6,7 @@ import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import DB from './config/mongodb';
 import route from './Route';
-import mongoose from 'mongoose';
-mongoose.set('strictQuery', true);
+import cloudinaryV2 from './config/cloudinary ';
 // BOOT EXPRESS
 const app: Application = express();
 const port = 5000;
@@ -18,9 +16,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 app.use(morgan('dev'));
 app.use(cookieParser());
+// APPLICATION ROUTING
+
+route(app);
 //CONNECT DB
 DB.connect();
-// APPLICATION ROUTING
-route(app);
 // Start server
 app.listen(port, () => console.log(`Server is listening on port ${port}!`));

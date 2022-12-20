@@ -1,13 +1,14 @@
 import mongoose from "mongoose";
-const URL = process.env.URL_MONGO_ALATS;
+mongoose.set('strictQuery', true);
+const URL =`${process.env.URL_MONGO_ALATS}`;
 
-async function connect(){
+const connect = async () =>{
     try {
-        await mongoose.connect(String(URL));
+        await mongoose.connect(URL);
         console.log("connect success!");
     } catch (err) {
-        console.log("connect failes");
+        console.log("connect failes");       
     }
 }
 
-export default {connect}
+export default {connect};

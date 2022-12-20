@@ -1,24 +1,46 @@
 import { Request, Response } from 'express';
 import User from '../models/User';
 import { isVietnamesePhoneNumber } from '../middewares/validations';
-
+import { genarateActiveToken } from '../config/generateToken';
+import {  IUser } from '../config/interface';
 const authControllers = {
-    login: async (req:Request , res:Response  ) =>{
+    register: async (req:Request , res:Response  ) =>{
         try {
             const {name , phoneNumber} = req.body;
             const isExistUser = await User.findOne({ phoneNumber : phoneNumber});
             if(isExistUser) return res.status(400).json({msg: "Số điện thoại đã được sử dụng !" });       
-            if (!isVietnamesePhoneNumber(phoneNumber)) return res.status(400).json({msg: "Số điện thoại không hợp lệ !" }) ;      
             const newUser = new User({
                 name: name,
                 phoneNumber: phoneNumber
             })
             await newUser.save();
-            return res.status(200).json({msg: 'OK', name:name, phoneNumber: phoneNumber })
+             
+            return res.status(200).json({msg: 'OK', newUser:newUser});
         } catch (error) {
             return res.status(500).json({error})            
-        }
-      
+        }      
+    },
+    login: async (req:Request , res:Response  ) =>{
+        try {
+            const {name , phoneNumber} = req.body;
+            const user = await User.findOne({name:name, phoneNumber : phoneNumber});
+            if(!user) return res.status(400).json({msg: "Bạn chưa có tài khoản hãy đăng kí!" });       
+                        const active_token = await genarateActiveToken({user}); 
+            res.cookie('active_token', active_token,  {
+                httpOnly: true,
+                maxAge: 30 * 24 * 60 * 60 * 1000, // 30 day
+            })         
+            return res.status(200).json({msg: 'OK',  active_token});
+        } catch (error) {
+            return res.status(500).json({error})            
+        }      
+    },
+    logout: async (req:Request , res:Response  ) =>{
+        try {            
+            return res.clearCookie('active_token').status(200).json({msg: 'Đăng xuất thành công'});
+        } catch (error) {
+            return res.status(500).json({error})            
+        }      
     }
 }
 

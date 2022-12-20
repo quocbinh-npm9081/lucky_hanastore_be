@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import authControllers from '../controllers/authControllers';
-import hanaController from '../controllers/hanaControllers';
+import { validation } from '../middewares/validations';
 const router = Router();
 
-router.post('/login',  authControllers.login);
-router.post('/',  hanaController.index);
+router.post('/register',validation,  authControllers.register);
+router.post('/login',validation,  authControllers.login);
+router.get('/logout',  authControllers.logout);
 
 export default router;

@@ -1,4 +1,4 @@
-import e, { Request, Response, NextFunction } from 'express';
+import  { Request, Response, NextFunction } from 'express';
 export const isVietnamesePhoneNumber = (phoneNumber: string) => {
     return /([\+84|84|0]+(3|5|7|8|9|1[2|6|8|9]))+([0-9]{8})\b/.test(phoneNumber);
 };
@@ -6,7 +6,7 @@ export const isToxic = (name: string) => {
     const arrayToxic = ['xxx', 'cc'];
     return arrayToxic.includes(name);
 };
-export const validationLogin = (req: Request, res: Response , next : NextFunction) =>{
+export const validation = (req: Request, res: Response , next : NextFunction) =>{
     const {name , phoneNumber} = req.body;
     const errors = [];
     if(!name){

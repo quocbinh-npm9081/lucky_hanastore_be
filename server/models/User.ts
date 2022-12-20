@@ -1,4 +1,4 @@
-import mongoose , { Schema, model } from 'mongoose';
+import mongoose , { Schema, model  } from 'mongoose';
 
 const userSchema = new Schema({
     name: {
@@ -16,14 +16,16 @@ const userSchema = new Schema({
     },
     role: {
         type: String,
-        default: 'user'
+        default: 'user' // admin
     },
     gif: {
         type: String,
         default : ""
     }
 
-})
+}, {
+    timestamps: true,
+  },)
 
 
 export default model("User", userSchema);
