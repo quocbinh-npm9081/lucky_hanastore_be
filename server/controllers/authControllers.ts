@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import User from '../models/User';
 import { isVietnamesePhoneNumber } from '../middewares/validations';
-import { genarateActiveToken } from '../config/generateToken';
+import { genarateActiveToken, genarateVerifyToken } from '../config/generateToken';
 import {  IUser } from '../config/interface';
 const authControllers = {
     register: async (req:Request , res:Response  ) =>{
@@ -41,7 +41,20 @@ const authControllers = {
         } catch (error) {
             return res.status(500).json({error})            
         }      
-    }
+    },
+    getAuth: async (req:Request , res:Response  ) =>{
+        try {          
+            const active_token = req.cookies.active_token;   
+            console.log("active_token", active_token);         
+            if(!active_token) return res.status(400).json({msg: 'Vui lòng đăng nhập lại'});
+          //  const userIdDecoded = await genarateVerifyToken(active_token);
+           // const user = await User.findById(userIdDecoded.id).select('-_id');
+          //  if(user?.role === 'admin')  return res.status(200).json({msg: 'OK ban la admin', active_token: active_token , user: user})
+           // return res.status(200).json({msg: 'OK', active_token: active_token , user: userIdDecoded})
+        } catch (error) {
+            return res.status(500).json({error})            
+        }      
+    },
 }
 
 export default authControllers;
